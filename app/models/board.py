@@ -13,7 +13,6 @@ class Board(db.Model):
             "title": self.title, 
             "owner": self.owner,
         }
-
         return board_to_dict
     
     @classmethod
