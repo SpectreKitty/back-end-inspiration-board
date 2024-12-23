@@ -15,7 +15,7 @@ def delete_card(card_id):
     return Response(status=204, mimetype="application/json")
 
 @bp.patch("/<card_id>/like")
-def update_like_card(card_id):
+def update_like_count_for_card(card_id):
     card = validate_model(Card, card_id)
 
     card.like_count += 1

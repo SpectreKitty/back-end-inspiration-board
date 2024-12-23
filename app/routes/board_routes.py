@@ -23,14 +23,14 @@ def create_board():
     return {"board": new_board.to_dict()}, 201
 
 @bp.get("")
-def get_all_boards():
+def read_all_boards():
     query = db.select(Board)
     boards = db.session.scalars(query)
     boards_response = [board.to_dict() for board in boards]
     return boards_response
 
 @bp.get("/<board_id>/cards")
-def get_cards_from_board(board_id):
+def read_cards_for_board(board_id):
     board = validate_model(Board, board_id)
     cards = [card.to_dict() for card in board.cards]
 
