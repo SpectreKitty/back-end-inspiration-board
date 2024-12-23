@@ -15,7 +15,7 @@ def delete_card(card_id):
     return Response(status=204, mimetype="application/json")
 
 @bp.patch("/<card_id>/like")
-def like_card(card_id):
+def update_like_card(card_id):
     card = validate_model(Card, card_id)
 
     card.like_count += 1
@@ -24,12 +24,12 @@ def like_card(card_id):
 
     return card.to_dict()
     
-@bp.patch("/<card_id>/unlike")
-def unlike_card(card_id):
-    card = validate_model(Card, card_id)
-    if card.like_count > 0:
-        card.like_count -= 1
+# @bp.patch("/<card_id>/unlike")
+# def unlike_card(card_id):
+#     card = validate_model(Card, card_id)
+#     if card.like_count > 0:
+#         card.like_count -= 1
 
-    db.session.commit()
+#     db.session.commit()
     
-    return card.to_dict()
+#     return card.to_dict()
