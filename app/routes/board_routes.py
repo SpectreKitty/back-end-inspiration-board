@@ -29,6 +29,12 @@ def read_all_boards():
     boards_response = [board.to_dict() for board in boards]
     return boards_response
 
+@bp.get("/<board_id>")
+def read_one_board(board_id):
+    board = validate_model(Board, board_id)
+    return board.to_dict(), 200
+
+
 @bp.get("/<board_id>/cards")
 def read_cards_for_board(board_id):
     board = validate_model(Board, board_id)
