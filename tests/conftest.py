@@ -45,27 +45,7 @@ def one_card(app, one_board):
     new_card = Card(message="test message", like_count=0, board_id=one_board.id)
     db.session.add(new_card)
     db.session.commit()
-
-
-# # This fixture gets called in every test that
-# # references "three_tasks"
-# # This fixture creates three tasks and saves
-# # them in the database
-# @pytest.fixture
-# def three_tasks(app):
-#     db.session.add_all([
-#         Task(title="Water the garden 🌷", 
-#              description="", 
-#              completed_at=None),
-#         Task(title="Answer forgotten email 📧", 
-#              description="", 
-#              completed_at=None),
-#         Task(title="Pay my outstanding tickets 😭", 
-#              description="", 
-#              completed_at=None)
-#     ])
-#     db.session.commit()
-
+    return new_card
 
 
 # This fixture gets called in every test that
@@ -76,16 +56,27 @@ def one_board(app):
     new_board = Board(title="test board", owner="team 6")
     db.session.add(new_board)
     db.session.commit()
+    return new_board
 
 
-# This fixture gets called in every test that
-# references "one_task_belongs_to_one_goal"
-# This fixture creates a task and a goal
-# It associates the goal and task, so that the
-# goal has this task, and the task belongs to one goal
-# @pytest.fixture
-# def one_task_belongs_to_one_goal(app, one_goal, one_task):
-#     task = Task.query.first()
-#     goal = Goal.query.first()
-#     goal.tasks.append(task)
-#     db.session.commit()
+@pytest.fixture
+def multiple_cards(app, one_board):
+    cards = [
+        Card(message="test message 1", like_count=2, board_id=one_board.id),
+        Card(message="test message 2", like_count=5, board_id=one_board.id),
+        Card(message="test message 3", like_count=0, board_id=one_board.id)
+    ]
+    db.session.add_all(cards)
+    db.session.commit()
+    return cards
+
+@pytest.fixture
+def multiple_boards(app):
+    boards = [
+        Board(title="Board 1", owner="Owner 1"),
+        Board(title="Board 2", owner="Owner 2"),
+        Board(title="Board 3", owner="Owner 3")
+    ]
+    db.session.add_all(boards)
+    db.session.commit()
+    return boards

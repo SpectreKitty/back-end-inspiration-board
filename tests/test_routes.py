@@ -19,13 +19,11 @@ def test_get_board_one_saved_board(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [
-    {
+    assert response_body == [{
         "id": 1,
         "owner": "team 6",
         "title": "test board"
-    }
-]
+    }]
 
 def test_get_board_not_found(client):
     # Act
