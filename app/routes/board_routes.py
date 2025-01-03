@@ -10,6 +10,11 @@ bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 def create_board():
     request_body = request.get_json()
 
+    # Validate title and owner are not blank
+    if not request_body.get("title") or not request_body.get("owner"):
+        response = {"details": "Invalid data: title and owner cannot be blank"}
+        abort(make_response(response, 400))
+
     try:
         new_board = Board.from_dict(request_body)
 
