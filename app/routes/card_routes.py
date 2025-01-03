@@ -23,13 +23,3 @@ def update_like_count_for_card(card_id):
     db.session.commit()
 
     return card.to_dict()
-    
-# @bp.patch("/<card_id>/unlike")
-# def unlike_card(card_id):
-#     card = validate_model(Card, card_id)
-#     if card.like_count > 0:
-#         card.like_count -= 1
-
-#     db.session.commit()
-    
-#     return card.to_dict()
