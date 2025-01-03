@@ -1,4 +1,4 @@
-from flask import Blueprint, request, abort, make_response
+from flask import Blueprint, Response, request, abort, make_response
 from .route_utilities import create_model, validate_model
 from ..db import db
 from app.models.board import Board
@@ -28,6 +28,14 @@ def read_all_boards():
     boards = db.session.scalars(query)
     boards_response = [board.to_dict() for board in boards]
     return boards_response
+
+@bp.delete("")
+def delete_all_boards():
+    Card.query.delete()
+    Board.query.delete()
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
 
 @bp.get("/<board_id>")
 def read_one_board(board_id):
