@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 import os
 from app.models.card import Card
 from app.models.board import Board
-from datetime import datetime
 
 load_dotenv()
 

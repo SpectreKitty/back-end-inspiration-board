@@ -3,15 +3,14 @@ from .route_utilities import create_model, validate_model
 from ..db import db
 from app.models.board import Board
 from app.models.card import Card
-import requests
+# import requests
 import os
 
-SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
-SLACK_API_URL = os.environ["SLACK_API_URL"]
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+# SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
+# SLACK_API_URL = os.environ["SLACK_API_URL"]
+# SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 
 bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
-
 
 @bp.post("")
 def create_board():
@@ -67,19 +66,19 @@ def create_card_for_board(board_id):
     request_body["board_id"] = board.id
 
     new_card = create_model(Card, request_body)
-    post_to_slack(new_card)
+    # post_to_slack(new_card)
 
     return new_card
 
 
-def post_to_slack(card):
-    headers = {
-        "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
-    }
+# def post_to_slack(card):
+#     headers = {
+#         "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
+#     }
 
-    data = {
-        "channel": SLACK_CHANNEL,
-        "text": f"New card added to board {card.board.title}: {card.message}",
-    }
+#     data = {
+#         "channel": SLACK_CHANNEL,
+#         "text": f"New card added to board {card.board.title}: {card.message}",
+#     }
 
-    r = requests.post(SLACK_API_URL, headers=headers, data=data)
+#     r = request.post(SLACK_API_URL, headers=headers, data=data)
