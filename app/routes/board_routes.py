@@ -1,16 +1,17 @@
 from flask import Blueprint, Response, request, abort, make_response
-from .route_utilities import create_model, validate_model
+from .route_utilities import  validate_model
 from ..db import db
 from app.models.board import Board
 from app.models.card import Card
-# import requests
+import requests
 import os
 
-# SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
-# SLACK_API_URL = os.environ["SLACK_API_URL"]
-# SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_CHANNEL = os.environ["SLACK_CHANNEL"]
+SLACK_API_URL = os.environ["SLACK_API_URL"]
+SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 
 bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
+
 
 @bp.post("")
 def create_board():
@@ -41,6 +42,7 @@ def read_all_boards():
     boards_response = [board.to_dict() for board in boards]
     return boards_response
 
+
 @bp.delete("")
 def delete_all_boards():
     Card.query.delete()
@@ -69,24 +71,29 @@ def read_cards_for_board(board_id):
 @bp.post("/<board_id>/cards")
 def create_card_for_board(board_id):
     board = validate_model(Board, board_id)
-
     request_body = request.get_json()
     request_body["board_id"] = board.id
 
-    new_card = create_model(Card, request_body)
-    # post_to_slack(new_card)
+    new_card = Card.from_dict(request_body)
+    db.session.add(new_card)
+    db.session.commit()
+    db.session.refresh(new_card)
 
-    return new_card
+    send_slack_message(new_card)
+
+    return {"card": new_card.to_dict()}, 201
 
 
-# def post_to_slack(card):
-#     headers = {
-#         "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
-#     }
+def send_slack_message(card):
+    url = SLACK_API_URL
+    headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
+    body = {
+        "channel": SLACK_CHANNEL,
+        "text": f"New card added to board {card.board.title}: {card.message}",
+    }
 
-#     data = {
-#         "channel": SLACK_CHANNEL,
-#         "text": f"New card added to board {card.board.title}: {card.message}",
-#     }
-
-#     r = request.post(SLACK_API_URL, headers=headers, data=data)
+    response = requests.post(url, json=body, headers=headers)
+    if response.json().get("ok") is True:
+        return response.json()
+    else:
+        print(f"Error sending message: {response.json()}")
