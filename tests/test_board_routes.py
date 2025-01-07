@@ -91,4 +91,3 @@ def test_create_board_missing_owner(client):
     # Assert
     assert response.status_code == 400
     assert response_body == {"details": "Invalid data: title and owner cannot be blank"}
-
